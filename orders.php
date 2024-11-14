@@ -62,6 +62,7 @@ $user_id = $_SESSION['user_id'];
                     $result = mysqli_query($db, $orders);
 
                     while ($row = mysqli_fetch_assoc($result)) {
+                        $order_id = $row['id'];
                         $product_brand = $row['product_brand'];
                         $product_name = $row['product_name'];
                         $product_price = $row['product_price'];
@@ -73,6 +74,31 @@ $user_id = $_SESSION['user_id'];
                         $region = $row['region'];
                         $zip_code = $row['zip_code'];
                         $status = $row['status'];
+
+                        // Set button to disabled unless the order is On Delivery
+                        $button_disabled = '';
+                        if ($status != 'On Delivery') {
+                            $button_disabled = 'disabled';
+                        }
+
+                        // For class name in the Status Cell & button text
+                        $status_class = '';
+                        $button_text = '';
+                        switch ($status) {
+                            case 'Pending':
+                                $status_class = 'status-pending';
+                                $button_text = 'Order Pending';
+                                break;
+                            case 'On Delivery':
+                                $status_class = 'status-on-your-way';
+                                $button_text = 'Confirm Product Received';
+                                break;
+                            case 'Received':
+                                $status_class = 'status-received';
+                                $button_text = 'Product Received';
+                                break;
+                        }
+
                     ?>
                         <tr>
                             <td>
@@ -90,9 +116,18 @@ $user_id = $_SESSION['user_id'];
                                 <p class="product-price bold">₱<?php echo number_format($total_price, 2); ?></p>
                             </td>
                             <td>
-                                <p class="order-status status-pending"><?php echo $status; ?></p>
+                                <p class="order-status <?php echo $status_class; ?>"><?php echo $status; ?></p>
                             </td>
-                            <td><button class="product-recieve-btn" disabled>Confirm Product Received</button></td>
+
+                            <td>
+                                <!-- Form to update order status to "Received" -->
+                                <form action="" method="POST">
+                                    <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+                                    <button type="submit" name="update_order_status_to_received" class="product-recieve-btn" <?php echo $button_disabled; ?>>
+                                        <?php echo $button_text ?>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     <?php
                     }
