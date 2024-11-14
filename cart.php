@@ -110,10 +110,13 @@ $user_id = $_SESSION['user_id'];
 
                 <div class="flex align-items-center margin-bottom" style="border-bottom: 1px solid #ccc; padding-bottom: 1rem">
                     <p class="margin-right-auto bold">Total</p>
-                    <p class="product-price bold">₱<?php echo number_format(($subtotal * 0.02) + $subtotal, 2); ?></p>
+                    <?php   
+                        $checkout_total = ($subtotal * 0.02) + $subtotal;
+                    ?>
+                    <p class="product-price bold">₱<?php echo number_format($checkout_total, 2); ?></p>
                 </div>
 
-                <button class="checkout-btn flex justify-content-center align-items-center margin-bottom"><i class="bi bi-cart-check-fill"></i><span>Checkout</span></button>
+                <a href="checkout.php?checkout_total=<?php echo $checkout_total; ?>" class="checkout-btn flex justify-content-center align-items-center margin-bottom"><i class="bi bi-cart-check-fill"></i><span>Checkout</span></a>
 
             </div>
         </div>

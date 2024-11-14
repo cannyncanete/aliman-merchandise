@@ -24,8 +24,9 @@
                 ?>
             </span>
 
+            <!-- CART LINK/ICON -->
             <?php
-            // Query to count the products in the cart for this user
+            // Query to count the products in the cart
             $query = "SELECT COUNT(*) AS count FROM carts WHERE user_id = '$user_id'";
             $result = mysqli_query($db, $query);
             $row = mysqli_fetch_assoc($result);
@@ -38,18 +39,40 @@
                     <span class="cart-badge"><?php echo $cart_count; ?></span>
                 <?php endif; ?>
             </a>
+
+            <!-- ORDERS LINK/ICON -->
+            <?php
+            // Query to count the products in the order
+            $query = "SELECT COUNT(*) AS count FROM orders WHERE user_id = '$user_id'";
+            $result = mysqli_query($db, $query);
+            $row = mysqli_fetch_assoc($result);
+            $order_count = $row['count'] ?? 0;
+            ?>
+
+            <a href="orders.php" class="icon-container">
+                <i class="bi bi-box-seam-fill"></i>
+                <?php if ($order_count > 0) : ?>
+                    <span class="cart-badge"><?php echo $order_count; ?></span>
+                <?php endif; ?>
+            </a>
         </div>
     </div>
 
     <br>
 
     <!-- BOTTOM-TOP-BAR / CATEGORIES -->
-    <div class="container flex  justify-content-center">
-        <a href="#">Mobiles & Gadgets</a>
-        <a href="#">Clothing & Apparel</a>
-        <a href="#">Home & Kitchen</a>
-        <a href="#">Health & Wellness</a>
-        <a href="#">Sports & Outdoors</a>
+    <div class="container flex justify-content-center">
+        <?php
+
+        $categories = "SELECT category_name FROM product_categories LIMIT 5";
+        $result = mysqli_query($db, $categories);
+
+        while ($row = mysqli_fetch_assoc($result)) {
+        ?>
+            <a href="#"><?php echo $row['category_name'] ?></a>
+        <?php
+        }
+        ?>
         <a href="#">More!</a>
     </div>
 </div>
