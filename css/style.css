@@ -55,7 +55,7 @@
     color: #fff;
 }
 
-.order-status.status-on-your-way {
+.order-status.status-for-pickup{
     background-color: #3e92cc;
     color: #fff;
 }
@@ -400,7 +400,7 @@
 }
 
 .product-recieve-btn {
-    background-color: var(--primary-color);
+    background-color: #28a745;
     color: #fff;
     width: fit-content;
     font-size: 1rem;

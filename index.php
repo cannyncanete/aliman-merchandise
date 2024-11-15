@@ -27,7 +27,7 @@ $user_id = $_SESSION['user_id'];
 
     <div id="main" class="container grid">
         <?php
-        $products = "SELECT * FROM products";
+        $products = "SELECT * FROM products WHERE quantity > 0";
         $result = mysqli_query($db, $products);
 
         while ($row = mysqli_fetch_assoc($result)) {

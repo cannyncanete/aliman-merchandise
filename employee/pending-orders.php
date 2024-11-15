@@ -87,8 +87,8 @@ $user_id = $_SESSION['user_id'];
                                 <!-- Form to update order status to "On Delivery" -->
                                 <form action="" method="POST">
                                     <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-                                    <button type="submit" name="update_order_status_to_on_delivery" class="product-recieve-btn">
-                                        Confirm & Deliver
+                                    <button type="submit" name="update_order_status_to_for_pickup" class="product-recieve-btn">
+                                        Confirm & Set for pickup
                                     </button>
                                 </form>
                             </td>

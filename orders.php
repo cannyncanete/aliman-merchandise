@@ -50,7 +50,6 @@ $user_id = $_SESSION['user_id'];
                         <td>Quantity</td>
                         <td>Total</td>
                         <td>Status</td>
-                        <td>Action</td>
                     </tr>
 
                     <?php
@@ -83,19 +82,15 @@ $user_id = $_SESSION['user_id'];
 
                         // For class name in the Status Cell & button text
                         $status_class = '';
-                        $button_text = '';
                         switch ($status) {
                             case 'Pending':
                                 $status_class = 'status-pending';
-                                $button_text = 'Order Pending';
                                 break;
-                            case 'On Delivery':
-                                $status_class = 'status-on-your-way';
-                                $button_text = 'Confirm Product Received';
+                            case 'For Pickup':
+                                $status_class = 'status-for-pickup';
                                 break;
                             case 'Received':
                                 $status_class = 'status-received';
-                                $button_text = 'Product Received';
                                 break;
                         }
 
@@ -117,16 +112,6 @@ $user_id = $_SESSION['user_id'];
                             </td>
                             <td>
                                 <p class="order-status <?php echo $status_class; ?>"><?php echo $status; ?></p>
-                            </td>
-
-                            <td>
-                                <!-- Form to update order status to "Received" -->
-                                <form action="" method="POST">
-                                    <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-                                    <button type="submit" name="update_order_status_to_received" class="product-recieve-btn" <?php echo $button_disabled; ?>>
-                                        <?php echo $button_text ?>
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                     <?php

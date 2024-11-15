@@ -85,17 +85,6 @@ $user_id = $_SESSION['user_id'];
                                 <input type="text" class="normal-input margin-bottom" name="email" placeholder="Email" required>
                                 <p></p>
                             </div>
-
-                            <p class="margin-bottom icon-text"><i class="bi bi-geo-alt-fill"></i> Delivery Address</p>
-                            <div class="flex align-items-center margin-bottom">
-                                <input type="text" class="normal-input" name="street" placeholder="Street" required>
-                                <input type="text" class="normal-input" name="city" placeholder="City" required>
-                            </div>
-
-                            <div class="flex align-items-center">
-                                <input type="text" class="normal-input" name="region" placeholder="Region" required>
-                                <input type="text" class="normal-input" name="zip_code" placeholder="Zip Code" required>
-                            </div>
                         </div>
                     </div>
 
