@@ -74,10 +74,6 @@ if (isset($_POST['create_order'])) {
     $user_id = $_POST['user_id'];
 
     $email = $_POST['email'];
-    $street = $_POST['street'];
-    $city = $_POST['city'];
-    $region = $_POST['region'];
-    $zip_code = $_POST['zip_code'];
 
     $checkout_total = $_POST['checkout_total'];
 
@@ -99,8 +95,8 @@ if (isset($_POST['create_order'])) {
                 $total_price = $row['cart_total_price'];
 
                 // Insert into the orders table
-                $insertOrder = "INSERT INTO orders (user_id, product_id, quantity, total_price, email, street, city, region, zip_code, status) 
-                            VALUES ('$user_id', '$product_id', '$quantity', '$total_price', '$email', '$street', '$city', '$region', '$zip_code', 'Pending')";
+                $insertOrder = "INSERT INTO orders (user_id, product_id, quantity, total_price, email, status) 
+                            VALUES ('$user_id', '$product_id', '$quantity', '$total_price', '$email', 'Pending')";
                 $insertResult = mysqli_query($db, $insertOrder);
             }
 
@@ -119,8 +115,8 @@ if (isset($_POST['create_order'])) {
     }
 }
 
-// UPDATE - ORDER TO ON DELIVERY
-if (isset($_POST['update_order_status_to_on_delivery'])) {
+// UPDATE - ORDER TO FOR PICKUP
+if (isset($_POST['update_order_status_to_for_pickup'])) {
 
     // Get the order ID, customer info, and ordered product details
     $order_id = $_POST['order_id'];
@@ -149,17 +145,17 @@ if (isset($_POST['update_order_status_to_on_delivery'])) {
     $update_product_query = "UPDATE products SET quantity = '$new_product_quantity' WHERE id = '$product_id'";
     $updateProduct = mysqli_query($db, $update_product_query);
 
-    // Update the order status to "On Delivery"
-    $update_status_query = "UPDATE orders SET status = 'On Delivery' WHERE id = '$order_id'";
+    // Update the order status to "For Pickup"
+    $update_status_query = "UPDATE orders SET status = 'For Pickup' WHERE id = '$order_id'";
     $updateStatus = mysqli_query($db, $update_status_query);
 
 
     if ($updateProduct && $updateStatus) {
         // Success message and redirection
-        echo "<script>alert('Order has been sent to delivery for $user_first_name $user_last_name'); location.href='orders-on-delivery.php'</script>";
+        echo "<script>alert('Order is set ready for pickup by $user_first_name $user_last_name'); location.href='orders-for-pickup.php'</script>";
     } else {
         // Handle any errors
-        echo "<script>alert('An error occurred while updating the order status and product quantity.'); location.href='orders-on-delivery.php'</script>";
+        echo "<script>alert('An error occurred while updating the order status and product quantity.'); location.href='orders-for-pickup.php'</script>";
     }
 }
 
@@ -172,9 +168,9 @@ if (isset($_POST['update_order_status_to_received'])) {
 
     if (mysqli_query($db, $update_status_query)) {
         // Success message and redirection
-        echo "<script>alert('You have confirmed that the order has been received.'); location.href='orders.php'</script>";
+        echo "<script>alert('You have confirmed that the order has been received.'); location.href='received-orders.php'</script>";
     } else {
         // Handle any errors
-        echo "<script>alert('An error occurred while updating the order status.'); location.href='orders.php'</script>";
+        echo "<script>alert('An error occurred while updating the order status.'); location.href='received-orders.php'</script>";
     }
 }

@@ -31,8 +31,8 @@ $user_id = $_SESSION['user_id'];
         <?php include 'side-bar.php'; ?>
 
         <div class="main">
-            <h2 class="margin-bottom"><i class="bi bi-box-seam-fill"></i> Orders on Delivery</h2>
-            <p class="margin-bottom">Here are all the orders on their way to the customer</p>
+            <h2 class="margin-bottom"><i class="bi bi-box-seam-fill"></i> Orders ready for Pickup</h2>
+            <p class="margin-bottom">Here are all the orders ready for pickup</p>
 
             <table id="myTable" class="display" style="width:100%">
                 <thead>
@@ -43,6 +43,7 @@ $user_id = $_SESSION['user_id'];
                         <th>Quantity</th>
                         <th style="text-align: right;">Total Price</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,7 +56,7 @@ $user_id = $_SESSION['user_id'];
                     FROM orders
                     JOIN products ON orders.product_id = products.id
                     JOIN users ON orders.user_id = users.id
-                    WHERE orders.status = 'On Delivery' ";
+                    WHERE orders.status = 'For Pickup' ";
 
 
                     $result = mysqli_query($db, $orders);
@@ -72,6 +73,19 @@ $user_id = $_SESSION['user_id'];
                         $quantity = $row['quantity'];
                         $total_price = $row['total_price'];
                         $status = $row['status'];
+
+                        $button_text = '';
+                        switch ($status) {
+                            case 'Pending':
+                                $button_text = 'status-pending';
+                                break;
+                            case 'For Pickup':
+                                $button_text = 'status-for-pickup';
+                                break;
+                            case 'Received':
+                                $button_text = 'status-received';
+                                break;
+                        }
                     ?>
                         <tr>
                             <td><?php echo $order_id ?></td>
@@ -79,7 +93,17 @@ $user_id = $_SESSION['user_id'];
                             <td><?php echo $product_brand . " " . $product_name ?></td>
                             <td><?php echo $quantity ?></td>
                             <td style="text-align: right;">₱<?php echo number_format($total_price, 2) ?></td>
-                            <td><p class="order-status status-on-your-way"><?php echo $status ?></p></td>
+                            <td><p class="order-status status-for-pickup"><?php echo $status ?></p></td>
+
+                            <td>
+                                <!-- Form to update order status to "Received" -->
+                                <form action="" method="POST">
+                                    <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+                                    <button type="submit" name="update_order_status_to_received" class="product-recieve-btn">
+                                        Confirm Order Received
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
 
                     <?php
