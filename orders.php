@@ -68,10 +68,6 @@ $user_id = $_SESSION['user_id'];
                         $quantity = $row['quantity'];
                         $total_price = $row['total_price'];
                         $email = $row['email'];
-                        $street = $row['street'];
-                        $city = $row['city'];
-                        $region = $row['region'];
-                        $zip_code = $row['zip_code'];
                         $status = $row['status'];
 
                         // Set button to disabled unless the order is On Delivery

@@ -28,11 +28,13 @@ if (isset($_POST['login'])) {
             $_SESSION['user_id'] = $user_id;
             $_SESSION['role'] = $role;
 
-            // Redirect based on user role
+            // Redirect based on user role [Customer, Employee, ]
             if ($role === 'Customer') {
                 header("Location: index.php");
             } elseif ($role === 'Employee') {
                 header("Location: employee/pending-orders.php");
+            } elseif ($role === 'Owner') {
+                header("Location: owner/inventory.php");
             }
             exit();
         } else {
@@ -159,6 +161,8 @@ if (isset($_POST['update_order_status_to_for_pickup'])) {
     }
 }
 
+
+// UPDATE - ORDER TO RECEIVED
 if (isset($_POST['update_order_status_to_received'])) {
     // Get the order ID and customer info from the form submission
     $order_id = $_POST['order_id'];
@@ -172,5 +176,41 @@ if (isset($_POST['update_order_status_to_received'])) {
     } else {
         // Handle any errors
         echo "<script>alert('An error occurred while updating the order status.'); location.href='received-orders.php'</script>";
+    }
+}
+
+// CREATE - NEW PRODUCT
+if (isset($_POST['create_new_product'])) {
+    // Get the inputs
+    $product_name = mysqli_real_escape_string($db, $_POST['product_name']);
+    $brand = mysqli_real_escape_string($db, $_POST['brand']);
+    $quantity = intval($_POST['quantity']); // Ensure it's an integer
+    $price = floatval($_POST['price']); // Ensure it's a float
+    $description = mysqli_real_escape_string($db, $_POST['description']);
+
+    // Determine category
+    if (!empty($_POST['new_category'])) {
+        // Use the new category
+        $new_category = mysqli_real_escape_string($db, $_POST['new_category']);
+        // Insert the new category into the database
+        $insert_category = "INSERT INTO product_categories (category_name) VALUES ('$new_category')";
+        mysqli_query($db, $insert_category);
+        // Get the ID of the newly created category
+        $category_id = mysqli_insert_id($db);
+    } else {
+        // Use an existing category
+        $category_id = intval($_POST['existing_category']); // Ensure it's an integer
+    }
+
+    // Insert the new product
+    $insert_new_product = "INSERT INTO products (category, brand, name, quantity, price, description) 
+                           VALUES ($category_id, '$brand', '$product_name', $quantity, $price, '$description')";
+    $result = mysqli_query($db, $insert_new_product);
+
+    // Check if the product was successfully added
+    if ($result) {
+        echo "<script>alert('You have added $quantity of \"$product_name\" to the inventory'); location.href='inventory.php'</script>";
+    } else {
+        echo "<script>alert('Error adding product: " . mysqli_error($db) . "'); location.href='inventory.php'</script>";
     }
 }
