@@ -50,6 +50,7 @@ $user_id = $_SESSION['user_id'];
                         <td>Quantity</td>
                         <td>Total</td>
                         <td>Status</td>
+                        <td>Last Updated</td>
                     </tr>
 
                     <?php
@@ -69,31 +70,32 @@ $user_id = $_SESSION['user_id'];
                         $total_price = $row['total_price'];
                         $email = $row['email'];
                         $status = $row['status'];
+                        $created_at = $row['created_at'];
+                        $paid_at = $row['paid_at'];
+                        $received_at = $row['received_at'];
 
-                        // Set button to disabled unless the order is On Delivery
-                        $button_disabled = '';
-                        if ($status != 'On Delivery') {
-                            $button_disabled = 'disabled';
-                        }
-
-                        // For class name in the Status Cell & button text
+                        // For class name in the Status Cell & Determine the date to display
                         $status_class = '';
+                        $last_updated = '';
                         switch ($status) {
                             case 'Pending':
                                 $status_class = 'status-pending';
+                                $last_updated = $created_at;
                                 break;
                             case 'For Pickup':
                                 $status_class = 'status-for-pickup';
+                                $last_updated = $paid_at;
                                 break;
                             case 'Received':
                                 $status_class = 'status-received';
+                                $last_updated = $received_at;
                                 break;
                         }
 
                     ?>
                         <tr>
                             <td>
-                                <div class="flex align-items-center cart-item" style="margin-right: 128px;">
+                                <div class="flex align-items-center cart-item">
                                     <div class="img-container" style="width: 128px;"></div>
                                     <div>
                                         <p><?php echo $product_brand; ?></p>
@@ -108,6 +110,9 @@ $user_id = $_SESSION['user_id'];
                             </td>
                             <td>
                                 <p class="order-status <?php echo $status_class; ?>"><?php echo $status; ?></p>
+                            </td>
+                            <td>
+                                <p><?php echo date('d F Y h:i A', strtotime($last_updated)); ?></p>
                             </td>
                         </tr>
                     <?php

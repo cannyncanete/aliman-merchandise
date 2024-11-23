@@ -34,7 +34,7 @@ if (isset($_POST['login'])) {
             } elseif ($role === 'Employee') {
                 header("Location: employee/pending-orders.php");
             } elseif ($role === 'Owner') {
-                header("Location: owner/inventory.php");
+                header("Location: owner/sales-chart.php");
             }
             exit();
         } else {
@@ -76,6 +76,7 @@ if (isset($_POST['create_order'])) {
     $user_id = $_POST['user_id'];
 
     $email = $_POST['email'];
+    $date = date('Y-m-d H:i:s');
 
     $checkout_total = $_POST['checkout_total'];
 
@@ -97,8 +98,8 @@ if (isset($_POST['create_order'])) {
                 $total_price = $row['cart_total_price'];
 
                 // Insert into the orders table
-                $insertOrder = "INSERT INTO orders (user_id, product_id, quantity, total_price, email, status) 
-                            VALUES ('$user_id', '$product_id', '$quantity', '$total_price', '$email', 'Pending')";
+                $insertOrder = "INSERT INTO orders (user_id, product_id, quantity, total_price, email, status, created_at) 
+                            VALUES ('$user_id', '$product_id', '$quantity', '$total_price', '$email', 'Pending', '$date')";
                 $insertResult = mysqli_query($db, $insertOrder);
             }
 
@@ -125,6 +126,8 @@ if (isset($_POST['update_order_status_to_for_pickup'])) {
     $user_first_name = $_POST['user_first_name'];
     $user_last_name = $_POST['user_last_name'];
 
+    $date = date('Y-m-d H:i:s');
+
     // Fetch the product_id and order quantity for the current order
     $order_query = "SELECT product_id, quantity FROM orders WHERE id = '$order_id'";
     $order_result = mysqli_query($db, $order_query);
@@ -148,16 +151,16 @@ if (isset($_POST['update_order_status_to_for_pickup'])) {
     $updateProduct = mysqli_query($db, $update_product_query);
 
     // Update the order status to "For Pickup"
-    $update_status_query = "UPDATE orders SET status = 'For Pickup' WHERE id = '$order_id'";
+    $update_status_query = "UPDATE orders SET status = 'For Pickup', paid_at = '$date'  WHERE id = '$order_id'";
     $updateStatus = mysqli_query($db, $update_status_query);
 
 
     if ($updateProduct && $updateStatus) {
         // Success message and redirection
-        echo "<script>alert('Order is set ready for pickup by $user_first_name $user_last_name'); location.href='orders-for-pickup.php'</script>";
+        echo "<script>alert('Order is set ready for pickup by $user_first_name $user_last_name'); location.href='pending-orders.php'</script>";
     } else {
         // Handle any errors
-        echo "<script>alert('An error occurred while updating the order status and product quantity.'); location.href='orders-for-pickup.php'</script>";
+        echo "<script>alert('An error occurred while updating the order status and product quantity.'); location.href='pending-orders.php'</script>";
     }
 }
 
@@ -166,16 +169,17 @@ if (isset($_POST['update_order_status_to_for_pickup'])) {
 if (isset($_POST['update_order_status_to_received'])) {
     // Get the order ID and customer info from the form submission
     $order_id = $_POST['order_id'];
+    $date = date('Y-m-d H:i:s');
 
     // Update the order status to "Received"
-    $update_status_query = "UPDATE orders SET status = 'Received' WHERE id = '$order_id'";
+    $update_status_query = "UPDATE orders SET status = 'Received', received_at = '$date' WHERE id = '$order_id'";
 
     if (mysqli_query($db, $update_status_query)) {
         // Success message and redirection
-        echo "<script>alert('You have confirmed that the order has been received.'); location.href='received-orders.php'</script>";
+        echo "<script>alert('You have confirmed that the order has been received.'); location.href='orders-for-pickup.php'</script>";
     } else {
         // Handle any errors
-        echo "<script>alert('An error occurred while updating the order status.'); location.href='received-orders.php'</script>";
+        echo "<script>alert('An error occurred while updating the order status.'); location.href='orders-for-pickup.php'</script>";
     }
 }
 
@@ -212,5 +216,42 @@ if (isset($_POST['create_new_product'])) {
         echo "<script>alert('You have added $quantity of \"$product_name\" to the inventory'); location.href='inventory.php'</script>";
     } else {
         echo "<script>alert('Error adding product: " . mysqli_error($db) . "'); location.href='inventory.php'</script>";
+    }
+}
+
+// UPDATE - PRODUCT
+if (isset($_POST['update_product_quantity_and_price'])) {
+    // Get the form data
+    $product_id = intval($_POST['product_id']);
+    $quantity = isset($_POST['product_quantity']) ? intval($_POST['product_quantity']) : null;
+    $price = isset($_POST['product_price']) ? floatval($_POST['product_price']) : null;
+
+    // Initialize the update query
+    $update_query = "UPDATE products SET ";
+    $fields_to_update = [];
+
+    // Add fields to update based on user input
+    if ($quantity !== null) {
+        $fields_to_update[] = "quantity = $quantity";
+    }
+    if ($price !== null) {
+        $fields_to_update[] = "price = $price";
+    }
+
+    // If there are fields to update, proceed
+    if (!empty($fields_to_update)) {
+        $update_query .= implode(", ", $fields_to_update) . " WHERE id = $product_id";
+
+        // Execute the update query
+        $result = mysqli_query($db, $update_query);
+
+        if ($result) {
+            echo "<script>alert('Product updated successfully'); location.href='inventory.php';</script>";
+        } else {
+            echo "<script>alert('Error updating product: " . mysqli_error($db) . "'); location.href='inventory.php';</script>";
+        }
+    } else {
+        // If no fields were updated, notify the user
+        echo "<script>alert('No changes made to the product'); location.href='inventory.php';</script>";
     }
 }
