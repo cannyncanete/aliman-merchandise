@@ -150,8 +150,8 @@ $user_id = $_SESSION['user_id'];
                     products.name AS product_name,
                     products.quantity AS stock_quantity,
                     products.price AS product_price,
-                    COALESCE(SUM(orders.quantity), 0) AS total_sold_items,
-                    COALESCE(SUM(orders.total_price), 0) AS total_revenue
+                    COALESCE(SUM(CASE WHEN orders.paid_at IS NOT NULL AND (orders.status = 'For Pickup' OR orders.status = 'Received') THEN orders.quantity ELSE 0 END), 0) AS total_sold_items,
+                    COALESCE(SUM(CASE WHEN orders.paid_at IS NOT NULL AND (orders.status = 'For Pickup' OR orders.status = 'Received') THEN orders.total_price ELSE 0 END), 0) AS total_revenue
                 FROM 
                     products
                 JOIN 
@@ -203,31 +203,52 @@ $user_id = $_SESSION['user_id'];
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $product_id = $row['id'];
-                            $category = $row['category_name'];
-                            $brand = $row['brand'];
-                            $product = $row['product_name'];
-                            $quantity = $row['stock_quantity'];
-                            $price = $row['product_price'];
-                            $total_sold_items = $row['total_sold_items'];
-                            $total_revenue = $row['total_revenue'];
-                        ?>
-                            <tr>
-                                <td><?php echo $product_id ?></td>
-                                <td><?php echo $category ?></td>
-                                <td><?php echo $brand ?></td>
-                                <td><?php echo $product ?></td>
-                                <td><?php echo $quantity ?></td>
-                                <td style="text-align: right;">₱<?php echo number_format($price, 2) ?></td>
-                                <td><?php echo $total_sold_items; ?></td>
-                                <td style="text-align: right;">₱<?php echo number_format($total_revenue, 2); ?></td>
-                            <?php
-                        }
-                            ?>
+                        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                            <tr class="clickable-row" data-id="<?php echo $row['id']; ?>" data-name="<?php echo $row['product_name']; ?>" data-quantity="<?php echo $row['stock_quantity']; ?>" data-price="<?php echo $row['product_price']; ?>" title="Click row to update product">
+                                <td><?php echo $row['id']; ?></td>
+                                <td><?php echo $row['category_name']; ?></td>
+                                <td><?php echo $row['brand']; ?></td>
+                                <td><?php echo $row['product_name']; ?></td>
+                                <td><?php echo $row['stock_quantity']; ?></td>
+                                <td style="text-align: right;">₱<?php echo number_format($row['product_price'], 2); ?></td>
+                                <td><?php echo $row['total_sold_items']; ?></td>
+                                <td style="text-align: right;">₱<?php echo number_format($row['total_revenue'], 2); ?></td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- UPDATE PRODUCT MODAL -->
+            <div id="updateModal" class="modal" style="display: none; width: 32%">
+                <div class="flex align-items-center" style="justify-content: space-between;">
+                    <div class="icon-text">
+                        <i class="bi bi-pen-fill"></i>
+                        <h2>Update Product</h2>
+                    </div>
+
+                    <i class="bi bi-x-lg close-icon" id="close-update-modal"></i>
+                </div><br>
+
+                <form method="POST">
+                    <input type="hidden" id="product_id" name="product_id">
+                    <div class="flex align-items-center">
+                        <div>
+                            <label>Product Name:</label>
+                            <input type="text" id="product_name" name="product_name" class="normal-input" readonly>
+                        </div>
+                        <div>
+                            <label>Quantity:</label>
+                            <input type="number" id="product_quantity" name="product_quantity" class="normal-input" required>
+                        </div>
+                        <div>
+                            <label>Price:</label>
+                            <input type="number" step="0.01" id="product_price" name="product_price" class="normal-input" required>
+                        </div>
+                    </div><br>
+
+                    <button type="submit" name="update_product_quantity_and_price" class="basic-btn flex" style="margin-left: auto;">Save</button>
+                </form>
             </div>
         </div>
     </div>
@@ -278,6 +299,42 @@ $user_id = $_SESSION['user_id'];
             document.getElementById('new_category').addEventListener('input', function() {
                 // Reset the select to its placeholder when typing in new category
                 document.getElementById('existing_category').selectedIndex = 0;
+            });
+        });
+    </script>
+
+    <!-- HANDLE UPDATING OF PRODUCT QUANTITY AND PRICE -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('updateModal');
+            const closeModal = document.getElementById('close-update-modal');
+            const tableRows = document.querySelectorAll('.clickable-row');
+
+            // Populate modal and open it on row click
+            tableRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    const productId = row.getAttribute('data-id');
+                    const productName = row.getAttribute('data-name');
+                    const productQuantity = row.getAttribute('data-quantity');
+                    const productPrice = row.getAttribute('data-price');
+
+                    // Populate modal fields
+                    document.getElementById('product_id').value = productId;
+                    document.getElementById('product_name').value = productName;
+                    document.getElementById('product_quantity').value = productQuantity;
+                    document.getElementById('product_price').value = productPrice;
+
+                    // Show modal
+                    modal.style.display = 'block';
+                    document.getElementById('overlay').style.display = 'block';
+
+                });
+            });
+
+            // Close modal
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
             });
         });
     </script>
