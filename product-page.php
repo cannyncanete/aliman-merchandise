@@ -33,13 +33,7 @@ $user_id = $_SESSION['user_id'];
     ?>
     <div id="main" class="container grid-2-1">
         <!-- Product Image -->
-        <div class="product-page-img grid-1-1">
-            <div class="img-container"></div>
-            <div class="img-container"></div>
-            <div class="img-container"></div>
-            <div class="img-container"></div>
-            <div class="img-container"></div>
-        </div>
+        <img src="<?php echo $product['image_path']; ?>" alt="<?php echo $product['name']; ?>" class="product-img">
 
         <!-- Product Info -->
         <div>
@@ -65,10 +59,6 @@ $user_id = $_SESSION['user_id'];
 
         </div>
     </div><br>
-
-    <div class="container">
-        <button onclick="window.location.href='server.php?logout=1'" class="logout-btn">Log out</button>
-    </div>
 
     <!-- <div class="container">
         <p>@2022 Aliman Merchandise: Ordering and Inventory Management System</p>

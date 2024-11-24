@@ -31,7 +31,7 @@ $user_id = $_SESSION['user_id'];
         <?php include 'side-bar.php'; ?>
 
         <div class="main">
-            <h2 class="margin-bottom"><i class="bi-bar-chart-line-fill"></i> Sales Chart</h2>
+            <h2 class="margin-bottom"><i class="bi-bar-chart-line-fill" style="color: #2a9d8f;"></i> Sales Chart</h2>
             <p class="margin-bottom">Here are all the charts for sales report</p>
 
             <div class="grid-1-1">

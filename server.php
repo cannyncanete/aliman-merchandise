@@ -50,6 +50,40 @@ if (isset($_GET['logout'])) {
     header("location: login.php");
 }
 
+// SIGN UP 
+if (isset($_POST['sign_up_btn'])) {
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    // Check if passwords match
+    if ($password !== $confirm_password) {
+        echo "<script>alert('Passwords do not match.'); location.href='signup.php';</script>";
+        exit();
+    }
+
+    // Check if username already exists
+    $check_user_query = "SELECT * FROM users WHERE username = '$username'";
+    $result = mysqli_query($db, $check_user_query);
+    if (mysqli_num_rows($result) > 0) {
+        echo "<script>alert('Username already exists. Please choose a different one.'); location.href='signup.php';</script>";
+        exit();
+    }
+
+    // Insert the user into the database
+    $insert_query = "INSERT INTO users (first_name, last_name, username, password, role) 
+                     VALUES ('$first_name', '$last_name', '$username', '$password', 'Customer')";
+    $insert_result = mysqli_query($db, $insert_query);
+
+    if ($insert_result) {
+        echo "<script>alert('Welcome $username! Please login below.'); location.href='login.php';</script>";
+    } else {
+        echo "<script>alert('Error: Unable to register user.'); location.href='signup.php';</script>";
+    }
+}
+
 // CREATE - CART
 if (isset($_POST['add_to_cart'])) {
     $user_id = $_POST['user_id'];

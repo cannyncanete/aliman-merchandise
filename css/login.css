@@ -1,0 +1,101 @@
+:root {
+    --base-color: #f8f8f8;
+    --text-color: #414241;
+    --primary-color: #E88D67;
+    --secondary-color: #006989;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--primary-color);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+
+    text-decoration: none;
+    color: var(--base-color);
+}
+
+.wrapper {
+    /* background-color: rgba(0, 0, 0, 0.064); */
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
+    position: relative;
+}
+
+.main {
+    padding: 1rem;
+    width: 364px;
+    height: fit-content;
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    z-index: 100;
+  }
+  
+
+h1 {
+    color: var(--base-color);
+    margin-bottom: 2rem;
+}
+
+/* flex */
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* input lines */
+::placeholder {
+    color: #fff;
+}
+
+input.input-field {
+    background-color: transparent;
+    border: 1px solid rgba(228, 228, 228, 0.64);
+    color: #fff;
+    width: 100%;
+    height: 50px;
+    outline: 0;
+    border-radius: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    transition: 300ms;
+    display: block;
+}
+
+input.input-field:hover,
+input.input-field:focus {
+    background-color: transparent;
+    border: 1px solid #fff;
+}
+
+
+/* buttons */
+.btn-login {
+    background-color: var(--secondary-color);
+    color: var(--base-color);
+    text-transform: uppercase;
+    width: 100%;
+    padding: 16px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 20px;
+    border: none;
+}
+
+.btn-login:hover {
+    cursor: pointer;
+    transition: 1s;
+}
