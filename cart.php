@@ -52,7 +52,8 @@ $user_id = $_SESSION['user_id'];
 
                 <?php
                 $cart = "SELECT carts.id AS cart_id, carts.quantity AS cart_quantity, carts.total_price AS cart_total_price, 
-                    products.brand AS product_brand, products.name AS product_name, products.price AS product_price 
+                    products.brand AS product_brand, products.name AS product_name, products.price AS product_price, 
+                    products.image_path AS image_path, products.id AS product_id 
                 FROM carts 
                 JOIN products ON carts.product_id = products.id 
                 WHERE carts.user_id = '$user_id'";
@@ -62,17 +63,23 @@ $user_id = $_SESSION['user_id'];
                 $subtotal = 0;
 
                 while ($row = mysqli_fetch_assoc($result)) {
-                    $cart_id = $row['cart_id']; // Cart ID
+                    $product_id = $row['product_id'];
+                    $cart_id = $row['cart_id'];
                     $product_name = $row['product_name']; // Product name from products table
                     $product_price = $row['product_price']; // Product price from products table
                     $product_quantity = $row['cart_quantity']; // Quantity from carts table
                     $product_total_price = $row['cart_total_price']; // Total price from carts table
                     $product_brand = $row['product_brand'];
+                    $image_path = $row['image_path'];
 
                     $subtotal += $product_total_price;
                 ?>
                     <div class="cart-item grid-1-3 margin-bottom" style="border-bottom: 1px solid #ccc; padding-bottom: 1rem">
-                        <div class="img-container margin-right-auto"></div>
+                        <div class="img-container" style="width: 128px;">
+                            <a href="product-page.php?id=<?php echo $product_id; ?>">
+                                <img src="<?php echo $image_path; ?>" alt="<?php echo $product_name; ?>" class="product-img">
+                            </a>
+                        </div>
 
                         <div class="cart-item-info">
                             <p><?php echo $product_brand; ?></p>
@@ -110,8 +117,8 @@ $user_id = $_SESSION['user_id'];
 
                 <div class="flex align-items-center margin-bottom" style="border-bottom: 1px solid #ccc; padding-bottom: 1rem">
                     <p class="margin-right-auto bold">Total</p>
-                    <?php   
-                        $checkout_total = ($subtotal * 0.02) + $subtotal;
+                    <?php
+                    $checkout_total = ($subtotal * 0.02) + $subtotal;
                     ?>
                     <p class="product-price bold">₱<?php echo number_format($checkout_total, 2); ?></p>
                 </div>
@@ -121,10 +128,6 @@ $user_id = $_SESSION['user_id'];
             </div>
         </div>
     </div><br>
-
-    <div class="container">
-        <button onclick="window.location.href='server.php?logout=1'" class="logout-btn">Log out</button>
-    </div>
 
     <!-- <div class="container">
         <p>@2022 Aliman Merchandise: Ordering and Inventory Management System</p>

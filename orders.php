@@ -54,7 +54,7 @@ $user_id = $_SESSION['user_id'];
                     </tr>
 
                     <?php
-                    $orders = "SELECT orders.*, products.brand AS product_brand, products.name AS product_name, products.price AS product_price
+                    $orders = "SELECT orders.*, products.brand AS product_brand, products.name AS product_name, products.price AS product_price, products.image_path AS image_path
                     FROM orders
                     JOIN products on orders.product_id = products.id 
                     WHERE orders.user_id = '$user_id'";
@@ -63,6 +63,7 @@ $user_id = $_SESSION['user_id'];
 
                     while ($row = mysqli_fetch_assoc($result)) {
                         $order_id = $row['id'];
+                        $product_id = $row['product_id'];
                         $product_brand = $row['product_brand'];
                         $product_name = $row['product_name'];
                         $product_price = $row['product_price'];
@@ -73,6 +74,7 @@ $user_id = $_SESSION['user_id'];
                         $created_at = $row['created_at'];
                         $paid_at = $row['paid_at'];
                         $received_at = $row['received_at'];
+                        $image_path = $row['image_path'];
 
                         // For class name in the Status Cell & Determine the date to display
                         $status_class = '';
@@ -96,7 +98,11 @@ $user_id = $_SESSION['user_id'];
                         <tr>
                             <td>
                                 <div class="flex align-items-center cart-item">
-                                    <div class="img-container" style="width: 128px;"></div>
+                                    <div class="img-container" style="width: 128px;">
+                                        <a href="product-page.php?id=<?php echo $product_id; ?>">
+                                            <img src="<?php echo $image_path; ?>" alt="<?php echo $product_name; ?>" class="product-img">
+                                        </a>
+                                    </div>
                                     <div>
                                         <p><?php echo $product_brand; ?></p>
                                         <h3 class="margin-right-auto"><?php echo $product_name; ?></h3>
@@ -126,10 +132,6 @@ $user_id = $_SESSION['user_id'];
             </div>
         </div>
     </div><br>
-
-    <div class="container">
-        <button onclick="window.location.href='server.php?logout=1'" class="logout-btn">Log out</button>
-    </div>
 
     <!-- <div class="container">
         <p>@2022 Aliman Merchandise: Ordering and Inventory Management System</p>

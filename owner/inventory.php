@@ -31,7 +31,7 @@ $user_id = $_SESSION['user_id'];
         <?php include 'side-bar.php'; ?>
 
         <div class="main">
-            <h2 class="margin-bottom"><i class="bi bi-inboxes-fill"></i> Inventory</h2>
+            <h2 class="margin-bottom"><i class="bi bi-inboxes-fill" style="color: #9d4edd;"></i> Inventory</h2>
             <p class="margin-bottom">Here are all the products currently in the inventory</p>
 
             <form action="" method="POST" class="flex align-items-center">
