@@ -105,6 +105,29 @@ if (isset($_POST['add_to_cart'])) {
     echo "<script>alert('$product_quantity $product_name Added to Cart'); location.href='product-page.php?id=$product_id'</script>";
 }
 
+// REMOVE - CART
+if (isset($_POST['remove_from_cart'])) {
+    $user_id = mysqli_real_escape_string($db, $_POST['user_id']);
+    $product_id = mysqli_real_escape_string($db, $_POST['product_id']);
+
+    // Get product name for alert message
+    $get_product_name_query = "SELECT name FROM products WHERE id = '$product_id'";
+    $product_result = mysqli_query($db, $get_product_name_query);
+    $product = mysqli_fetch_assoc($product_result);
+    $product_name = $product['name'];
+
+    // Remove product from cart
+    $remove_query = "DELETE FROM carts WHERE user_id = '$user_id' AND product_id = '$product_id'";
+    $remove_result = mysqli_query($db, $remove_query);
+
+    if ($remove_result) {
+        echo "<script>alert('$product_name was removed from your cart'); location.href='cart.php';</script>";
+    } else {
+        echo "<script>alert('Error: Unable to remove $product_name from your cart.'); location.href='cart.php';</script>";
+    }
+}
+
+
 // CREATE - ORDER
 if (isset($_POST['create_order'])) {
     $user_id = $_POST['user_id'];

@@ -75,10 +75,20 @@ $user_id = $_SESSION['user_id'];
                     $subtotal += $product_total_price;
                 ?>
                     <div class="cart-item grid-1-3 margin-bottom" style="border-bottom: 1px solid #ccc; padding-bottom: 1rem">
-                        <div class="img-container" style="width: 128px;">
-                            <a href="product-page.php?id=<?php echo $product_id; ?>">
-                                <img src="<?php echo $image_path; ?>" alt="<?php echo $product_name; ?>" class="product-img">
-                            </a>
+                        <div class="flex">
+                            <div class="img-container" style="width: 128px;">
+                                <a href="product-page.php?id=<?php echo $product_id; ?>">
+                                    <img src="<?php echo $image_path; ?>" alt="<?php echo $product_name; ?>" class="product-img">
+                                </a>
+                            </div>
+
+                            <!-- Remove Button -->
+                            <form method="post" action="cart.php" onsubmit="return confirm('Are you sure you want to remove <?php echo $product_name; ?> from your cart?');">
+                                <input type="hidden" name="remove_from_cart" value="1">
+                                <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                                <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+                                <button type="submit" class="btn-remove" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">X</button>
+                            </form>
                         </div>
 
                         <div class="cart-item-info">
@@ -91,8 +101,10 @@ $user_id = $_SESSION['user_id'];
                                 <p><?php echo $product_quantity; ?></p>
                                 <p class="product-price bold">₱<?php echo number_format($product_total_price, 2); ?></p>
                             </div>
-
                         </div>
+
+
+
                     </div>
 
                 <?php
@@ -105,25 +117,11 @@ $user_id = $_SESSION['user_id'];
                 <h2 class="margin-bottom">Order Summary</h2>
 
                 <div class="flex align-items-center margin-bottom" style="border-bottom: 1px solid #ccc; padding-bottom: 1rem">
-                    <p class="margin-right-auto">Subtotal</p>
-                    <p>₱<?php echo number_format($subtotal, 2); ?></p>
-                </div>
-
-                <div class="flex align-items-center margin-bottom" style="border-bottom: 1px solid #ccc; padding-bottom: 1rem">
-                    <p class="margin-right-auto">Shipping</p>
-                    <!-- Placeholder for shipping fee, 2% of subtotal -->
-                    <p>₱<?php echo number_format($subtotal * 0.02, 2); ?></p>
-                </div>
-
-                <div class="flex align-items-center margin-bottom" style="border-bottom: 1px solid #ccc; padding-bottom: 1rem">
                     <p class="margin-right-auto bold">Total</p>
-                    <?php
-                    $checkout_total = ($subtotal * 0.02) + $subtotal;
-                    ?>
-                    <p class="product-price bold">₱<?php echo number_format($checkout_total, 2); ?></p>
+                    <p class="product-price bold">₱<?php echo number_format($subtotal, 2); ?></p>
                 </div>
 
-                <a href="checkout.php?checkout_total=<?php echo $checkout_total; ?>" class="checkout-btn flex justify-content-center align-items-center margin-bottom"><i class="bi bi-cart-check-fill"></i><span>Checkout</span></a>
+                <a href="checkout.php?checkout_total=<?php echo $subtotal; ?>" class="checkout-btn flex justify-content-center align-items-center margin-bottom"><i class="bi bi-cart-check-fill"></i><span>Checkout</span></a>
 
             </div>
         </div>
