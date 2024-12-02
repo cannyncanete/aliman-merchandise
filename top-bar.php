@@ -60,7 +60,7 @@
     <!-- BOTTOM-TOP-BAR / CATEGORIES -->
     <div class="container flex justify-content-center">
         <?php
-        $categories = "SELECT id, category_name FROM product_categories LIMIT 5"; // Include the `id` of the category
+        $categories = "SELECT id, category_name FROM product_categories"; // Include the `id` of the category
         $result = mysqli_query($db, $categories);
 
         while ($row = mysqli_fetch_assoc($result)) {
@@ -71,7 +71,6 @@
         <?php
         }
         ?>
-        <a href="#">More!</a> <!-- Link to display additional categories -->
     </div>
 
 </div>
